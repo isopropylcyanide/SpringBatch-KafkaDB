@@ -23,11 +23,12 @@ public class User {
 	@Column(name = "DATE")
 	private Date date;
 
-	public User(Long id, String name, String department, Integer salary) {
+	public User(Long id, String name, String department, Integer salary, Date date) {
 		this.id = id;
 		this.name = name;
 		this.department = department;
 		this.salary = salary;
+		this.date = date;
 	}
 
 	public User(){
