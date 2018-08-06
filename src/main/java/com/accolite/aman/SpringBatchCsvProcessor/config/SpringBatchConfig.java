@@ -3,6 +3,7 @@ package com.accolite.aman.SpringBatchCsvProcessor.config;
 import com.accolite.aman.SpringBatchCsvProcessor.model.User;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -20,8 +21,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
-
 @Configuration
+@EnableBatchProcessing
 public class SpringBatchConfig {
 
 	@Value("${inputFile}")
@@ -45,7 +46,7 @@ public class SpringBatchConfig {
 	}
 
 	@Bean
-	public FlatFileItemReader<User> getFileItemReader(){
+	public FlatFileItemReader<User> itemReader(){
 		FlatFileItemReader<User> flatFileItemReader = new FlatFileItemReader<>();
 		flatFileItemReader.setResource(resource);
 		flatFileItemReader.setName("CSV Reader");
@@ -55,12 +56,12 @@ public class SpringBatchConfig {
 	}
 
 	@Bean
-	private LineMapper<User> getLineMapper() {
+	public LineMapper<User> getLineMapper() {
 		DefaultLineMapper<User> userLineMapper = new DefaultLineMapper<User>();
 		DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
 		lineTokenizer.setDelimiter(",");
 		lineTokenizer.setStrict(false);
-		lineTokenizer.setNames("id","name","dept", "salary");
+		lineTokenizer.setNames("id", "name", "department", "salary");
 
 		BeanWrapperFieldSetMapper<User> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
 		fieldSetMapper.setTargetType(User.class);
