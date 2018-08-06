@@ -44,45 +44,19 @@ public class SpringBatchConfig {
 	@Autowired
 	private StepBuilderFactory stepBuilderFactory;
 
+
 	@Bean
 	public Job job(){
-
 		Step step = stepBuilderFactory.get("ETL-File-Load")
-						.<User, User> chunk(100)
-						.reader(itemReader)
-						.processor(itemProcessor)
-						.writer(itemWriter)
-						.build();
+							.<User, User> chunk(100)
+							.reader(itemReader)
+							.processor(itemProcessor)
+							.writer(itemWriter)
+							.build();
 
 		return jobBuilderFactory.get("ETL-Load")
-				.incrementer(new RunIdIncrementer())
-				.start(step)
-				.build();
+							.incrementer(new RunIdIncrementer())
+							.start(step)
+							.build();
 	}
-
-	@Bean
-	public FlatFileItemReader<User> itemReader(){
-		FlatFileItemReader<User> flatFileItemReader = new FlatFileItemReader<>();
-		flatFileItemReader.setResource(resource);
-		flatFileItemReader.setName("CSV Reader");
-		flatFileItemReader.setLinesToSkip(1);
-		flatFileItemReader.setLineMapper(getLineMapper());
-		return flatFileItemReader;
-	}
-
-	@Bean
-	public LineMapper<User> getLineMapper() {
-		DefaultLineMapper<User> userLineMapper = new DefaultLineMapper<User>();
-		DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
-		lineTokenizer.setDelimiter(",");
-		lineTokenizer.setStrict(false);
-		lineTokenizer.setNames("id", "name", "department", "salary");
-
-		BeanWrapperFieldSetMapper<User> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-		fieldSetMapper.setTargetType(User.class);
-		userLineMapper.setLineTokenizer(lineTokenizer);
-		userLineMapper.setFieldSetMapper(fieldSetMapper);
-		return userLineMapper;
-	}
-
 }
