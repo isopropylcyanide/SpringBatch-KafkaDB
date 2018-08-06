@@ -16,6 +16,7 @@ import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,9 +29,23 @@ public class SpringBatchConfig {
 	@Value("${inputFile}")
 	private  Resource resource;
 
+	@Autowired
+	private ItemReader<User> itemReader;
+
+	@Autowired
+	private ItemWriter<User> itemWriter;
+
+	@Autowired
+	private ItemProcessor<User, User> itemProcessor;
+
+	@Autowired
+	private JobBuilderFactory jobBuilderFactory;
+
+	@Autowired
+	private StepBuilderFactory stepBuilderFactory;
+
 	@Bean
-	public Job job(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory,
-			ItemReader<User> itemReader, ItemProcessor<User, User> itemProcessor, ItemWriter<User> itemWriter){
+	public Job job(){
 
 		Step step = stepBuilderFactory.get("ETL-File-Load")
 						.<User, User> chunk(100)
