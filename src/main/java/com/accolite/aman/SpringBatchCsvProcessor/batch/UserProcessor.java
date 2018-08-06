@@ -4,6 +4,7 @@ import com.accolite.aman.SpringBatchCsvProcessor.model.User;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ public class UserProcessor implements ItemProcessor<User, User> {
 		String deptCode = user.getDepartment();
 		String deptName = deptMap.getOrDefault(deptCode, "Miscellaneous");
 		user.setDepartment(deptName);
+		user.setDate(new Date());
 		System.out.println(String.format("User dept converted from [%s] to [%s]", deptCode, deptName));
 		return user;
 	}

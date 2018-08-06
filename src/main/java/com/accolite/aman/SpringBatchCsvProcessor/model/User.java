@@ -3,6 +3,7 @@ package com.accolite.aman.SpringBatchCsvProcessor.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Date;
 
 @Entity
 public class User {
@@ -18,6 +19,9 @@ public class User {
 
 	@Column(name = "SALARY")
 	private Integer salary;
+
+	@Column(name = "DATE")
+	private Date date;
 
 	public User(Long id, String name, String department, Integer salary) {
 		this.id = id;
@@ -49,8 +53,8 @@ public class User {
 		return department;
 	}
 
-	public void setDepartment(String deptCode) {
-		this.department = deptCode;
+	public void setDepartment(String department) {
+		this.department = department;
 	}
 
 	public Integer getSalary() {
@@ -59,6 +63,14 @@ public class User {
 
 	public void setSalary(Integer salary) {
 		this.salary = salary;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	@Override
