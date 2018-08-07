@@ -60,7 +60,7 @@ Below mentioned pipeline has been followed through out the codebase. The impleme
   $ kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic CSV_TOPIC_K
   
 ```
- Make sure following is appended to * config\server.properties *
+ Make sure following is appended to **config\server.properties**
  ```
  port = 9092
  advertised.host.name = localhost 
@@ -72,5 +72,5 @@ Below mentioned pipeline has been followed through out the codebase. The impleme
 Branch | Description
 ------------ | -------------
 master | Base branch that reads from CSV and processes them to a topic in a Kafka producer
-batch-db-upload | Similar to master except that it deserializes the csv to H2 Database
+batch-db-upload | Similar to master except that it deserializes the CSV to a H2 Database instead of Kafka
 
