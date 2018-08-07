@@ -1,12 +1,15 @@
 package com.accolite.aman.SpringBatchCsvProcessor.service.producer;
 
 import com.accolite.aman.SpringBatchCsvProcessor.model.User;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
-import java.util.Date;
+import java.util.Collection;
 
 @Service
 public class KafkaProducerService {
@@ -16,6 +19,8 @@ public class KafkaProducerService {
 
 	@Value("${kafka.csv.topic}")
 	private String topic;
+
+	private static final Logger logger = Logger.getLogger(KafkaProducerService.class);
 
 	/**
 	 * Created using the following
@@ -29,18 +34,22 @@ public class KafkaProducerService {
 	 * 		--from-beginning
 	 * 5) Produce from console:
 	 * 		 kafka-console-producer.bat --broker-list localhost:9092 --topic KAFKA_EXAMPLE_TOPIC
-	 * @param name
+	 * @param users
 
-	 * @return
 	 */
-	public String publishUserByName(String name) {
-		User user = new User();
-		user.setId(1L);
-		user.setName(name);
-		user.setDepartment("00X");
-		user.setSalary(12000);
-		user.setDate(new Date());
-		kafkaTemplate.send(topic, user);
-		return "Published successfully: " + user;
+	public void publishUser(Collection<? extends User> users){
+		users.forEach(user -> {
+			kafkaTemplate.send(topic, user).addCallback(new ListenableFutureCallback<SendResult<String, User>>() {
+				@Override
+				public void onFailure(Throwable throwable) {
+					logger.info("Error publishing " + user);
+				}
+
+				@Override
+				public void onSuccess(SendResult<String, User> stringUserSendResult) {
+					logger.info("Published successfully " + user + " to Kafka " + stringUserSendResult.toString());
+				}
+			});
+		});
 	}
 }

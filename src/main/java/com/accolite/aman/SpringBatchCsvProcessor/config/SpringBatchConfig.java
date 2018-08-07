@@ -6,16 +6,10 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.LineMapper;
-import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
-import org.springframework.batch.item.file.mapping.DefaultLineMapper;
-import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -47,14 +41,14 @@ public class SpringBatchConfig {
 
 	@Bean
 	public Job job(){
-		Step step = stepBuilderFactory.get("ETL-File-Load")
+		Step step = stepBuilderFactory.get("CSV-Kafka")
 							.<User, User> chunk(100)
 							.reader(itemReader)
 							.processor(itemProcessor)
 							.writer(itemWriter)
 							.build();
 
-		return jobBuilderFactory.get("ETL-Load")
+		return jobBuilderFactory.get("CSV-Kafka-ETL-Load")
 							.incrementer(new RunIdIncrementer())
 							.start(step)
 							.build();

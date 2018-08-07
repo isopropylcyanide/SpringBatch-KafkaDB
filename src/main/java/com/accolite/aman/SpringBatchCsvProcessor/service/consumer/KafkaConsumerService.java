@@ -11,8 +11,7 @@ public class KafkaConsumerService {
 	private static final Logger logger = Logger.getLogger(KafkaConsumerService.class);
 
 
-	@KafkaListener(containerFactory = "kafkaListenerContainerFactory",
-			topics = "${kafka.csv.topic}", groupId = "${kafka.csv.group.id}")
+	@KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = "${kafka.csv.topic}", groupId = "${kafka.csv.group.id}")
 	public void consume(User user){
 		logger.info("Consuming new message: " + user.getName() + " -> " + user);
 	}
