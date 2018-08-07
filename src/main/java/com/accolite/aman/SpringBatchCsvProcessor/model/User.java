@@ -81,6 +81,7 @@ public class User {
 				", name='" + name + '\'' +
 				", department='" + department + '\'' +
 				", salary=" + salary +
+				", date=" + date +
 				'}';
 	}
 }

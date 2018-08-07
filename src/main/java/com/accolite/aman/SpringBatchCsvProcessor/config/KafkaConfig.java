@@ -25,8 +25,13 @@ import java.util.Map;
 @EnableKafka
 public class KafkaConfig {
 
-	@Value("${kafka.csv.group.id}")
 	private String groupId;
+
+	@Bean
+	public String groupId(@Value("${kafka.csv.group.id}") String groupId) {
+		this.groupId = groupId;
+		return groupId;
+	}
 
 	@Bean
 	public ProducerFactory<String, User> producerFactory(){
