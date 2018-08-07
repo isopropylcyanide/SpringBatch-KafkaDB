@@ -22,7 +22,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class SpringBatchConfig {
 
-	@Value("${inputFile}")
+	@Value("${input.csv.file}")
 	private  Resource resource;
 
 	@Autowired
