@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserCsvReader implements ItemReader<User> {
 
-	@Value("${inputFile}")
+	@Value("${input.csv.file}")
 	private Resource resource;
 
 	@Bean
