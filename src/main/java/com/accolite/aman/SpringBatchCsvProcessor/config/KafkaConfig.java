@@ -5,6 +5,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -24,6 +25,9 @@ import java.util.Map;
 @EnableKafka
 public class KafkaConfig {
 
+	@Value("${kafka.csv.group.id}")
+	private String groupId;
+
 	@Bean
 	public ProducerFactory<String, User> producerFactory(){
 		Map<String, Object> config = new HashMap<>();
@@ -42,7 +46,7 @@ public class KafkaConfig {
 	public ConsumerFactory<String, User> consumerFactory(){
 		Map<String, Object> config = new HashMap<>();
 		config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
-		config.put(ConsumerConfig.GROUP_ID_CONFIG, "GROUP_ID");
+		config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
 		config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 		return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), new JsonDeserializer<>(User.class));

@@ -2,8 +2,11 @@ package com.accolite.aman.SpringBatchCsvProcessor.service.producer;
 
 import com.accolite.aman.SpringBatchCsvProcessor.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 public class KafkaProducerService {
@@ -11,7 +14,8 @@ public class KafkaProducerService {
 	@Autowired
 	private KafkaTemplate<String, User> kafkaTemplate;
 
-	private static final String TOPIC = "KAFKA_EXAMPLE_TOPIC";
+	@Value("${kafka.csv.topic}")
+	private String topic;
 
 	/**
 	 * Created using the following
@@ -31,7 +35,12 @@ public class KafkaProducerService {
 	 */
 	public String publishUserByName(String name) {
 		User user = new User();
-		kafkaTemplate.send(TOPIC, user);
+		user.setId(1L);
+		user.setName(name);
+		user.setDepartment("00X");
+		user.setSalary(12000);
+		user.setDate(new Date());
+		kafkaTemplate.send(topic, user);
 		return "Published successfully: " + user;
 	}
 }
