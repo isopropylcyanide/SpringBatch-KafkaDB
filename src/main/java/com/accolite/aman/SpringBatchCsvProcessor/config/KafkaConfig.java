@@ -1,7 +1,9 @@
 package com.accolite.aman.SpringBatchCsvProcessor.config;
 
 import com.accolite.aman.SpringBatchCsvProcessor.model.User;
+import com.accolite.aman.SpringBatchCsvProcessor.model.UserJsonDeserializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -15,11 +17,20 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.listener.AbstractMessageListenerContainer;
+import org.springframework.kafka.listener.ErrorHandler;
+import org.springframework.kafka.listener.KafkaListenerErrorHandler;
+import org.springframework.kafka.listener.ListenerExecutionFailedException;
+import org.springframework.kafka.listener.SeekToCurrentErrorHandler;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.messaging.Message;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.springframework.kafka.listener.AbstractMessageListenerContainer.*;
 
 @Configuration
 @EnableKafka
@@ -53,8 +64,8 @@ public class KafkaConfig {
 		config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
 		config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
 		config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), new JsonDeserializer<>(User.class));
+		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, UserJsonDeserializer.class);
+		return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), new UserJsonDeserializer());
 	}
 
 	@Bean
@@ -63,4 +74,7 @@ public class KafkaConfig {
 		factory.setConsumerFactory(consumerFactory());
 		return factory;
 	}
+
+
+
 }
